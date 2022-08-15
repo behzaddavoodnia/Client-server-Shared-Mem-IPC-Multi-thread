@@ -1,15 +1,8 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include "jansson.h"
- 
-
-//#define _GNU_SOURCE
+#include "deps.h"
+#include "funcs.h"
+#include "macros.h"
+#include "types.h"
+#include "global_var.h"
 
 /* The following piece of code is characterized by implementing a problem of reader-writer type
    but it can be generalize to a client-server implementation: 
@@ -21,45 +14,9 @@
 /* This solution uses a global lock "lock" to protect all access to shared information.
    It uses two condition variables (cond, cond2) so that each thread can safely sleep with a wait operation.
    A thread notifies another when it has completed about our corresponding condition variable.*/
+  
 
-//*************** Defines ************************
-#define MAX_DATASET_SIZE 4999
-#define SHARED_MEM_SIZE 512
-#define THREAD_NUM 20//10 //20
-#define NUM_OF_REQ 20
-
-//************** Data structures *******************
-typedef struct shared_DS {
-	char requests[10]; //string name of req
-	char* comment; // request header comments
-	char* req_type;// type of req (sort, dup, mul)
-    int req_param2_mult; // multiplicant coeff
-	int req_param2_dups; //duplicant coeff
-	int req_id; //request id
-	int client_id; //client id
-	char* req_param1; //dataset
-	char* req_param2; // if mul or dup its null else its top sort or down sort
-	
-}shared_DS;
-
-//***********************************************
-
-//***************** Global Var ******************
-pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond  = PTHREAD_COND_INITIALIZER;
-pthread_cond_t cond2 = PTHREAD_COND_INITIALIZER;
-bool data_read = false;
-
-//**************************************************
-void read_dataset_and_sort_in_file(bool up_down, const char* input_dataset,const char* requests);
-void read_dataset_and_dups_in_file(int dup, const char* input_dataset, const char* requests);
-void read_dataset_and_mult_in_file(int mult, const char* input_dataset, const char* requests);
-int comp_sou(const void *p, const void *q);
-int comp_noz(const void *p, const void *q);
-void get_DS(shared_DS* input_ds);
-void* client(void* input_shds);
-void* server(void* snum);
-//**************************************************
+//**************************************//
 /* Comparison function. Receives two generic (void) pointers to the items under comparison. */
 int comp_sou(const void *p, const void *q) {
     int x = *(const int *)p;
@@ -135,7 +92,7 @@ void get_DS(shared_DS* input_ds){
     int arr[MAX_DATASET_SIZE];
     int k =0;
     while(!feof(rf)){
-            fscanf(rf, "%3d", &arr[k]);
+            if(fscanf(rf, "%3d", &arr[k]));
             k++;
         }
     fclose(rf);
@@ -171,7 +128,7 @@ void read_dataset_and_dups_in_file(int dup, const char* input_dataset, const cha
     int arr[MAX_DATASET_SIZE];
     int k =0;
     while(!feof(rf)){
-            fscanf(rf, "%3d", &arr[k]);
+            if(fscanf(rf, "%3d", &arr[k]));
             k++;
         }
     fclose(rf);
@@ -206,7 +163,7 @@ void read_dataset_and_mult_in_file(int mul, const char* input_dataset, const cha
     int arr[MAX_DATASET_SIZE];
     int k =0;
     while(!feof(rf)){
-            fscanf(rf, "%3d", &arr[k]);
+            if(fscanf(rf, "%3d", &arr[k]));
             k++;
         }
     fclose(rf);
@@ -228,8 +185,8 @@ void read_dataset_and_mult_in_file(int mul, const char* input_dataset, const cha
 
 }
 
-
-//**************** Client/Server Functions **********************
+//*************************************************************//
+//**************** Client Function **********************
 //***************************************************************
 void* client(void* input_shds)
 {
@@ -261,8 +218,8 @@ void* client(void* input_shds)
     usleep(100);
  }
 }
-
-//*************************************
+//*******************************************************//
+//*************** Server Func **********************
 void* server(void* snum)
 {
   while(true)
@@ -295,6 +252,7 @@ void* server(void* snum)
     }
 }
 //******************************************************************
+//******************************************//
 
 int main()
 {

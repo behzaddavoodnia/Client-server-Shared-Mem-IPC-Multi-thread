@@ -25,9 +25,9 @@ _Below is an example of how you can compile the source code using gcc._
 
 1. Just use make:
    ```sh
-   make
-   ```
-2. And for execute the program use:
-   ```sh
    make run
+   ```
+2. After a while press:
+   ```sh
+   Ctrl + C
    ```
