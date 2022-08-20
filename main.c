@@ -101,8 +101,10 @@ void get_DS(shared_DS* input_ds){
         qsort(arr, MAX_DATASET_SIZE, sizeof (int),comp_noz);
     else
         qsort(arr, MAX_DATASET_SIZE, sizeof (int),comp_sou);
-
-    wf = fopen(requests,"w");
+		
+		char filepath[30];
+		sprintf(filepath,"output/%s.txt",requests);
+		wf = fopen(filepath,"w");
         if(wf == NULL){
         /* File not created hence exit */
         printf("Unable to create file.\n");
@@ -137,7 +139,10 @@ void read_dataset_and_dups_in_file(int dup, const char* input_dataset, const cha
 	for(int i=0 ; i < MAX_DATASET_SIZE ; i++)
 		if(arr[i] == dup)
 			counter++;
-	wf = fopen(requests,"w");
+		
+		char filepath[30];
+		sprintf(filepath,"output/%s.txt",requests);
+		wf = fopen(filepath,"w");
         if(wf == NULL){
         /* File not created hence exit */
         printf("Unable to create file.\n");
@@ -172,7 +177,9 @@ void read_dataset_and_mult_in_file(int mul, const char* input_dataset, const cha
 	for(int i=0 ; i < MAX_DATASET_SIZE ; i++)
 		if(arr[i] % mul == 0)
 			counter++;
-	wf = fopen(requests,"w");
+		char filepath[30];
+		sprintf(filepath,"output/%s.txt",requests);
+		wf = fopen(filepath,"w");
         if(wf == NULL){
         /* File not created hence exit */
         printf("Unable to create file.\n");

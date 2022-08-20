@@ -1,5 +1,6 @@
 ## Copyright @ Behzad Davoodnia
 DIR = sina_task_output
+DIR_OUT = output
 TARGET = $(DIR)/main
 
 CC = gcc
@@ -11,6 +12,8 @@ LIBS = -ljansson -pthread -lm
 
 OBJECTS = $(patsubst %.c,$(DIR)/%.o,$(wildcard *.c))
 HEADERS = $(wildcard *.h)
+
+$(shell mkdir -p $(DIR_OUT))
 
 .PHONY: all default clean run
 
