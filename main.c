@@ -1,8 +1,8 @@
-#include "deps.h"
-#include "funcs.h"
-#include "macros.h"
-#include "types.h"
-#include "global_var.h"
+#include "include/deps.h"
+#include "include/funcs.h"
+#include "include/macros.h"
+#include "include/types.h"
+#include "include/global_var.h"
 
 /* The following piece of code is characterized by implementing a problem of reader-writer type
    but it can be generalize to a client-server implementation: 
@@ -80,8 +80,11 @@ void get_DS(shared_DS* input_ds){
 //**************************************//
  void read_dataset_and_sort_in_file(bool up_down, const char* input_dataset,const char* requests)
  {
+    char filepath[50];
+	sprintf(filepath,"datasets/%s",input_dataset);
     FILE *rf, *wf;
-    rf = fopen(input_dataset, "r");
+
+    rf = fopen(filepath, "r");
 
     if (rf == NULL){
         printf("Error Reading Dataset File\n");
@@ -102,7 +105,6 @@ void get_DS(shared_DS* input_ds){
     else
         qsort(arr, MAX_DATASET_SIZE, sizeof (int),comp_sou);
 		
-		char filepath[30];
 		sprintf(filepath,"output/%s.txt",requests);
 		wf = fopen(filepath,"w");
         if(wf == NULL){
@@ -118,8 +120,11 @@ void get_DS(shared_DS* input_ds){
  } 
 void read_dataset_and_dups_in_file(int dup, const char* input_dataset, const char* requests)
 {
+    char filepath[50];
+	sprintf(filepath,"datasets/%s",input_dataset);
     FILE *rf, *wf;
-    rf = fopen(input_dataset, "r");
+    
+    rf = fopen(filepath, "r");
 
     if (rf == NULL){
         printf("Error Reading Dataset File\n");
@@ -140,7 +145,6 @@ void read_dataset_and_dups_in_file(int dup, const char* input_dataset, const cha
 		if(arr[i] == dup)
 			counter++;
 		
-		char filepath[30];
 		sprintf(filepath,"output/%s.txt",requests);
 		wf = fopen(filepath,"w");
         if(wf == NULL){
@@ -156,8 +160,11 @@ void read_dataset_and_dups_in_file(int dup, const char* input_dataset, const cha
 }
 void read_dataset_and_mult_in_file(int mul, const char* input_dataset, const char* requests)
 {
+    char filepath[50];
+	sprintf(filepath,"datasets/%s",input_dataset);
     FILE *rf, *wf;
-    rf = fopen(input_dataset, "r");
+    
+    rf = fopen(filepath, "r");
 
     if (rf == NULL){
         printf("Error Reading Dataset File\n");
@@ -177,7 +184,7 @@ void read_dataset_and_mult_in_file(int mul, const char* input_dataset, const cha
 	for(int i=0 ; i < MAX_DATASET_SIZE ; i++)
 		if(arr[i] % mul == 0)
 			counter++;
-		char filepath[30];
+
 		sprintf(filepath,"output/%s.txt",requests);
 		wf = fopen(filepath,"w");
         if(wf == NULL){
